@@ -5,8 +5,8 @@
     </audio>
 
     <div class="meta">
-      <h1 v-if="title">{{ title }}</h1>
-      <h2 v-if="subtitle">{{ subtitle }}</h2>
+      <transition name="fade"><h1 v-if="title">{{ title }}</h1></transition>
+      <transition name="fade"><h2 v-if="subtitle">{{ subtitle }}</h2></transition>
     </div>
 
     <div class="links" v-if="isLink">
@@ -18,10 +18,10 @@
 </template>
 
 <script>
-  import { NOVA_URL, NOVA_BASE_URL } from '../config';
-  import OnTheAir from '../services/OnTheAir';
-  var { ipcRenderer } = require('electron');
-  var Plyr = require('plyr');
+  import { NOTIFICATION_DELAY, DEFAULT_IMAGE } from '../config'
+  import OnTheAir from '../services/OnTheAir'
+  var { ipcRenderer } = require('electron')
+  var Plyr = require('plyr')
 
   export default {
 
@@ -39,57 +39,59 @@
         itunes: null,
         mute: false,
         stream: undefined,
-        player: null,
-      } 
+        player: null
+      }
     },
 
     mounted () {
-      var vm = this;
-      OnTheAir.setVM(this).start();
+      var vm = this
+      OnTheAir.setVM(this).start()
       this.$on('song_changed', function (datas) {
-        vm.datas = datas;
+        vm.datas = datas
       })
-      ipcRenderer.on('MediaPlayPause', function(event, datas) {
+      ipcRenderer.on('MediaPlayPause', function (event, datas) {
         if (vm.player.isMuted()) {
-          vm.player.toggleMute();
-          vm.mute = false;
+          vm.player.toggleMute()
+          vm.mute = false
         } else {
-          vm.player.toggleMute();
-          vm.mute = true;
+          vm.player.toggleMute()
+          vm.mute = true
         }
-      });
+      })
     },
 
     watch: {
       datas: function (datas) {
-        this.title = datas.title;
-        this.subtitle = datas.subtitle;
-        this.image = datas.image;
-        console.log(datas.currentTrack);
-        if (datas.currentTrack != null) {
-          this.deezer = datas.currentTrack.deezer_url;
-          this.spotify = datas.currentTrack.spotify_url;
-          this.itunes = datas.currentTrack.itunes_url;
-        }
-        if (this.stream == undefined) {
-          this.stream = datas.radio.high_def_stream_url;
-          this.setPlayer();
+        var vm = this
+        setTimeout(function () {
+          vm.title = datas.title
+          vm.subtitle = datas.subtitle
+          vm.image = datas.image
+          if (datas.currentTrack != null) {
+            vm.deezer = datas.currentTrack.deezer_url
+            vm.spotify = datas.currentTrack.spotify_url
+            vm.itunes = datas.currentTrack.itunes_url
+          }
+        }, NOTIFICATION_DELAY)
+        if (this.stream === undefined) {
+          this.stream = datas.radio.high_def_stream_url
+          this.setPlayer()
         }
       },
       player: function (player) {
-        player.play();
+        player.play()
       }
     },
 
     methods: {
 
       isLink () {
-        if (this.spotify == null
-          && this.deezer == null
-          && this.itunes == null) {
-          return false;
+        if (this.spotify === null &&
+          this.deezer === null &&
+          this.itunes === null) {
+          return false
         }
-        return true;
+        return true
       },
 
       open (link) {
@@ -99,38 +101,39 @@
       backgroundImage: function () {
         if (this.image) {
           return {
-            backgroundImage: 'url(' + this.image + ')',
+            backgroundImage: 'url(' + this.image + ')'
           }
         } else {
-          return null;
+          return {
+            backgroundImage: 'url(' + DEFAULT_IMAGE + ')'
+          }
         }
-        
       },
 
       openSpotify: function () {
         if (this.datas.currentTrack.spotify_url) {
-          this.open(this.datas.currentTrack.spotify_url);
+          this.open(this.datas.currentTrack.spotify_url)
         }
       },
 
       openDeezer: function () {
         if (this.datas.currentTrack.deezer_url) {
-          this.open(this.datas.currentTrack.deezer_url);
+          this.open(this.datas.currentTrack.deezer_url)
         }
       },
 
       openItunes: function () {
         if (this.datas.currentTrack.itunes_url) {
-          this.open(this.datas.currentTrack.itunes_url);
+          this.open(this.datas.currentTrack.itunes_url)
         }
       },
 
       setPlayer: function () {
-        var vm = this;
-        setTimeout(function() {
-          var players = Plyr.setup();
-          vm.player = players[0];
-        }, 200);
+        var vm = this
+        setTimeout(function () {
+          var players = Plyr.setup()
+          vm.player = players[0]
+        }, 200)
       }
     }
   }
@@ -142,6 +145,13 @@
     margin: 0;
     padding: 0;
   }
+
+  .fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
 
   [class^="socicon-"],
   [class*=" socicon-"] {

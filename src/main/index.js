@@ -1,5 +1,4 @@
 import { app, BrowserWindow, globalShortcut } from 'electron'
-const path = require('path')
 
 /**
  * Set `__static` path to static files in production
@@ -10,7 +9,6 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
-let tray
 
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
@@ -30,12 +28,12 @@ function createWindow () {
     titleBarStyle: 'hidden-inset'
   })
 
-  mainWindow.setAspectRatio(1);
+  mainWindow.setAspectRatio(1)
 
   mainWindow.loadURL(winURL)
 
   globalShortcut.register('MediaPlayPause', () => {
-    mainWindow.webContents.send('MediaPlayPause', {});
+    mainWindow.webContents.send('MediaPlayPause', {})
   })
 
   mainWindow.on('closed', () => {
