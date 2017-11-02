@@ -8,6 +8,8 @@
 
 [Radio Nova](http://www.nova.fr/)
 
+[Download the latest release (Mac Only)](https://github.com/romainlp/Radio-Nova/releases/latest)
+
 #### Build Setup
 
 ``` bash
