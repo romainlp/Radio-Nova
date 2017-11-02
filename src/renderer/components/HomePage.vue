@@ -10,9 +10,9 @@
     </div>
 
     <div class="links" v-if="isLink">
-      <a href="" v-if="spotify" v-on:click="openSpotify" class="socicon-spotify"></a>
-      <a href="" v-if="deezer" v-on:click="openDeezer" class="socicon-deezer"></a>
-      <a href="" v-if="itunes" v-on:click="openItunes" class="socicon-apple"></a>
+      <a href="" v-if="spotify" v-on:click.prevent="openSpotify" class="socicon-spotify"></a>
+      <a href="" v-if="deezer" v-on:click.prevent="openDeezer" class="socicon-deezer"></a>
+      <a href="" v-if="itunes" v-on:click.prevent="openItunes" class="socicon-apple"></a>
     </div>
   </div>
 </template>
