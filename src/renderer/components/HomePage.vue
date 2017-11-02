@@ -48,6 +48,7 @@
       OnTheAir.setVM(this).start();
       this.$on('song_changed', function (datas) {
         vm.datas = datas;
+        console.log(datas);
       })
       ipcRenderer.on('MediaPlayPause', function(event, datas) {
         if (vm.player.isMuted()) {
@@ -90,9 +91,14 @@
       },
 
       backgroundImage: function () {
-        return {
-          backgroundImage: 'url(' + this.image + ')',
+        if (this.image) {
+          return {
+            backgroundImage: 'url(' + this.image + ')',
+          }
+        } else {
+          return null;
         }
+        
       },
 
       openSpotify: function () {

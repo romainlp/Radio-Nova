@@ -1,4 +1,5 @@
 import { app, BrowserWindow, globalShortcut } from 'electron'
+const path = require('path')
 
 /**
  * Set `__static` path to static files in production
@@ -9,6 +10,8 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 let mainWindow
+let tray
+
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`

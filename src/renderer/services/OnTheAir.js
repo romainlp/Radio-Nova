@@ -26,6 +26,7 @@ const OnTheAir = {
             function (error, response, body) {
                 if (error == null && body != null && body.length > 0) {
                     OnTheAir.datas = JSON.parse(body);
+                    console.log(OnTheAir.datas);
                     OnTheAir.notify();
                 }
             }
@@ -33,9 +34,16 @@ const OnTheAir = {
     },
 
     notify: function () {
-        var title = this.datas.currentTrack.title;
-        var artist = this.datas.currentTrack.artist;
-        var thumbnail = this.datas.currentTrack.thumbnail;
+        if (this.datas.currentTrack == null && this.datas.currenShow == null) {
+            var title = this.datas.radio.name;
+            var thumbnail = this.datas.radio.image;
+            var artist = this.datas.radio.name;
+        } else {
+            var title = this.datas.currentTrack.title;
+            var artist = this.datas.currentTrack.artist;
+            var thumbnail = this.datas.currentTrack.thumbnail;
+        }
+
         var notify = false;
         var notificationTitle = null;
         var notificationBody = null;
@@ -50,10 +58,6 @@ const OnTheAir = {
             this.songTitle = title;
             notificationTitle = title;
             notify = true;
-
-            if (title == 'Titre non disponible') {
-                notificationTitle = this.datas.shows[0].title;
-            }
         }
 
         if (notify) {
