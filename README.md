@@ -1,19 +1,18 @@
-# radionova
+# Radio Nova (FR) Player
 
-> Radio Nova (FR) Player
+> Player based on Electron + VueJS. Using media keys and system notifications.
 
 #### Build Setup
 
 ``` bash
 # install dependencies
-npm install
+yarn
 
 # serve with hot reload at localhost:9080
 npm run dev
 
 # build electron application for production
 npm run build
-
 
 ```
 
