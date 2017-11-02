@@ -1,15 +1,15 @@
 <template>
-  <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute }">
+  <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': isLink() }">
     <audio v-if="stream" ref="audioplayer">
       <source :src="stream" type="audio/mp3">
     </audio>
 
     <div class="meta">
       <h1 v-if="title">{{ title }}</h1>
-      <h2 v-if="artist">{{ artist }}</h2>
+      <h2 v-if="subtitle">{{ subtitle }}</h2>
     </div>
 
-    <div class="links" v-if="isLink()">
+    <div class="links" v-if="isLink">
       <a href="" v-if="spotify" v-on:click="openSpotify" class="socicon-spotify"></a>
       <a href="" v-if="deezer" v-on:click="openDeezer" class="socicon-deezer"></a>
       <a href="" v-if="itunes" v-on:click="openItunes" class="socicon-apple"></a>
@@ -33,14 +33,14 @@
         datas: {},
         image: null,
         title: null,
-        artist: null,
+        subtitle: null,
         spotify: null,
         deezer: null,
         itunes: null,
         mute: false,
         stream: undefined,
         player: null,
-      }
+      } 
     },
 
     mounted () {
@@ -48,7 +48,6 @@
       OnTheAir.setVM(this).start();
       this.$on('song_changed', function (datas) {
         vm.datas = datas;
-        console.log(datas);
       })
       ipcRenderer.on('MediaPlayPause', function(event, datas) {
         if (vm.player.isMuted()) {
@@ -63,13 +62,15 @@
 
     watch: {
       datas: function (datas) {
-        this.artist = datas.currentTrack.artist;
-        this.title = datas.currentTrack.title;
-        this.image = NOVA_BASE_URL + datas.currentTrack.image;
-        this.deezer = datas.currentTrack.deezer_url;
-        this.spotify = datas.currentTrack.spotify_url;
-        this.itunes = datas.currentTrack.itunes_url;
-
+        this.title = datas.title;
+        this.subtitle = datas.subtitle;
+        this.image = datas.image;
+        console.log(datas.currentTrack);
+        if (datas.currentTrack != null) {
+          this.deezer = datas.currentTrack.deezer_url;
+          this.spotify = datas.currentTrack.spotify_url;
+          this.itunes = datas.currentTrack.itunes_url;
+        }
         if (this.stream == undefined) {
           this.stream = datas.radio.high_def_stream_url;
           this.setPlayer();
@@ -83,7 +84,12 @@
     methods: {
 
       isLink () {
-        return (this.spotify || this.deezer || this.itunes);
+        if (this.spotify == null
+          && this.deezer == null
+          && this.itunes == null) {
+          return false;
+        }
+        return true;
       },
 
       open (link) {
@@ -155,18 +161,6 @@
     -ms-overflow-style: scrollbar;
     -webkit-app-region: drag;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-    &:hover {
-      .links {
-        -webkit-transition: transform 0.3s ease-in-out;
-        transition: transform 0.3s ease-in-out;
-        transform: translateY(-70px);
-      }
-      .meta {
-        -webkit-transition: transform 0.3s ease-in-out;
-        transition: transform 0.3s ease-in-out;
-        transform: translateY(-70px);
-      }
-    }
   }
 
   .plyr--audio {
@@ -178,6 +172,20 @@
     width: 100vw;
     background-size: cover;
     background-position: center center;
+
+
+    &.has-link:hover {
+      .links {
+        -webkit-transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(-70px);
+      }
+      .meta {
+        -webkit-transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(-70px);
+      }
+    }
 
     &.muted {
       .meta {

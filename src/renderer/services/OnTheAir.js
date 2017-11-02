@@ -26,7 +26,6 @@ const OnTheAir = {
             function (error, response, body) {
                 if (error == null && body != null && body.length > 0) {
                     OnTheAir.datas = JSON.parse(body);
-                    console.log(OnTheAir.datas);
                     OnTheAir.notify();
                 }
             }
@@ -34,28 +33,37 @@ const OnTheAir = {
     },
 
     notify: function () {
-        if (this.datas.currentTrack == null && this.datas.currenShow == null) {
-            var title = this.datas.radio.name;
-            var thumbnail = this.datas.radio.image;
-            var artist = this.datas.radio.name;
+        var title;
+        var subtitle;
+        var image;
+        var notify;
+        var notificationTitle;
+        var notificationBody;
+
+        if (this.datas.currentTrack == null && this.datas.currentShow == null) {
+            title = this.datas.radio.name;
+            subtitle = this.datas.radio.name;
+            image = this.datas.radio.image;
         } else {
-            var title = this.datas.currentTrack.title;
-            var artist = this.datas.currentTrack.artist;
-            var thumbnail = this.datas.currentTrack.thumbnail;
+            if (this.datas.currentTrack != null) {
+                title = this.datas.currentTrack.title;
+                subtitle = this.datas.currentTrack.artist;
+                image = this.datas.currentTrack.image;
+            } else {
+                title = this.datas.currentShow.title;
+                subtitle = this.datas.currentShow.artist;
+                image = this.datas.currentShow.image;
+            }
         }
 
-        var notify = false;
-        var notificationTitle = null;
-        var notificationBody = null;
-
-        if (artist != this.songArtist) {
-            this.songArtist = artist;
-            notificationBody = artist;
+        if (subtitle != this.subtitle) {
+            this.subtitle = subtitle;
+            notificationBody = subtitle;
             notify = true;
         }
 
-        if (title != this.songTitle) {
-            this.songTitle = title;
+        if (title != this.title) {
+            this.title = title;
             notificationTitle = title;
             notify = true;
         }
@@ -64,8 +72,12 @@ const OnTheAir = {
             let myNotification = new Notification(notificationTitle, {
                 body: notificationBody,
                 silent: true,
-                icon: NOVA_BASE_URL + thumbnail
+                icon: NOVA_BASE_URL + image
             });
+
+            this.datas['title'] = notificationTitle;
+            this.datas['subtitle'] = notificationBody;
+            this.datas['image'] = NOVA_BASE_URL + image;
 
             OnTheAir.vm.$emit('song_changed', this.datas);
         }
