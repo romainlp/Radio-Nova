@@ -1,5 +1,9 @@
 # Radio Nova (FR) Player
 
+
+![Radio Nova Player](https://github.com/romainlp/Radio-Nova/raw/master/static/screenshot.jpeg "Mac OS Screenshot")
+
+
 > Player based on Electron + VueJS. Using media keys and system notifications.
 
 [Radio Nova](http://www.nova.fr/)
