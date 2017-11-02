@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" v-bind:style="backgroundImage()">
+  <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute }">
     <audio v-if="stream" ref="audioplayer">
       <source :src="stream" type="audio/mp3">
     </audio>
@@ -8,6 +8,7 @@
       <h1 v-if="title">{{ title }}</h1>
       <h2 v-if="artist">{{ artist }}</h2>
     </div>
+
     <div class="links" v-if="isLink()">
       <a href="" v-if="spotify" v-on:click="openSpotify" class="socicon-spotify"></a>
       <a href="" v-if="deezer" v-on:click="openDeezer" class="socicon-deezer"></a>
@@ -49,10 +50,12 @@
         vm.datas = datas;
       })
       ipcRenderer.on('MediaPlayPause', function(event, datas) {
-        if (vm.player.isPaused()) {
-          vm.player.play();
+        if (vm.player.isMuted()) {
+          vm.player.toggleMute();
+          vm.mute = false;
         } else {
-          vm.player.pause();
+          vm.player.toggleMute();
+          vm.mute = true;
         }
       });
     },
@@ -88,7 +91,7 @@
 
       backgroundImage: function () {
         return {
-          backgroundImage: 'url(' + this.image + ')'
+          backgroundImage: 'url(' + this.image + ')',
         }
       },
 
@@ -169,6 +172,15 @@
     width: 100vw;
     background-size: cover;
     background-position: center center;
+
+    &.muted {
+      .meta {
+        h1, h2 {
+          text-decoration: line-through;
+          font-style: italic;
+        }
+      }
+    }
   }
   .cover img {
     display: block;
@@ -222,7 +234,7 @@
     transition: transform 0.3s ease-in-out;
     width: 100%;
     left: 0;
-    bottom: 0;
+    bottom: 10px;
     padding: 10px 12px 5px;
   }
   h1, h2 {

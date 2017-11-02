@@ -2,6 +2,8 @@
 
 > Player based on Electron + VueJS. Using media keys and system notifications.
 
+[Radio Nova](http://www.nova.fr/)
+
 #### Build Setup
 
 ``` bash
