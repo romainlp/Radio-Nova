@@ -8,24 +8,10 @@
       <h1 v-if="title">{{ title }}</h1>
       <h2 v-if="artist">{{ artist }}</h2>
     </div>
-    <div class="links" v-if="spotify == false">
-      <ul>
-        <li v-if="spotify" class="spotify">
-          <a href="" v-on:click="openSpotify">
-            <img src="~@/assets/logos/spotify.png" />
-          </a>
-        </li>
-        <li v-if="deezer" class="deezer">
-          <a href="" v-on:click="openDeezer">
-            <img src="~@/assets/logos/deezer.png" />
-          </a>
-        </li>
-        <li v-if="itunes" class="itunes">
-          <a href="" v-on:click="openItunes">
-            <img src="~@/assets/logos/itunes.png" />
-          </a>
-        </li>
-      </ul>
+    <div class="links" v-if="isLink()">
+      <a href="" v-if="spotify" v-on:click="openSpotify" class="socicon-spotify"></a>
+      <a href="" v-if="deezer" v-on:click="openDeezer" class="socicon-deezer"></a>
+      <a href="" v-if="itunes" v-on:click="openItunes" class="socicon-apple"></a>
     </div>
   </div>
 </template>
@@ -92,6 +78,10 @@
 
     methods: {
 
+      isLink () {
+        return (this.spotify || this.deezer || this.itunes);
+      },
+
       open (link) {
         this.$electron.shell.openExternal(link)
       },
@@ -138,10 +128,36 @@
     padding: 0;
   }
 
+  [class^="socicon-"],
+  [class*=" socicon-"] {
+    font-family: 'Socicon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body { 
+    overflow: hidden;
     -ms-overflow-style: scrollbar;
     -webkit-app-region: drag;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    &:hover {
+      .links {
+        -webkit-transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(-70px);
+      }
+      .meta {
+        -webkit-transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(-70px);
+      }
+    }
   }
 
   .plyr--audio {
@@ -157,52 +173,57 @@
   .cover img {
     display: block;
     width: 100%;
-    height: 100%;
     object-fit: cover;
   }
   .links {
     position: absolute;
-    top: 40px;
-    left: 12px;
-    width: calc(100% - 24px);
-    ul {
-      text-align: center;
-      width: 100%;
-    }
-    li {
-      display: block;
-      text-align: center;
-      a {
-        display: inline-block;
-        height: 40px;
+    width: 100%;
+    background: #F55656;
+    text-align: center;
+    padding: 15px 12px;
+    -webkit-transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    height: 70px;
+    bottom: -70px;
+    a {
+      text-decoration: none;
+      font-size: 2em;
+      display: inline-block;
+      vertical-align: middle;
+      color: white;
+      -webkit-transition: transform 0.3s ease-in-out;
+      transition: transform 0.3s ease-in-out;
+      margin: 0 10px;
+      &:hover {
+        transform: translateY(-5%);
       }
-    }
-    .spotify {
-      a {
-        width: 40px;
-        img {
-        }
-      }
-    }
-    .itunes {
-      a {
-        width: 110px;
-        img {
-        }
-      }
-    }
-    .deezer {
-      a {
-        width: 182px;
-        img {
+      &.socicon-spotify {
+        &:before {
+          background: #fff;
+          color: #F55656;
+          width: 1.4em;
+          height: 1.4em;
+          -webkit-border-radius: 500px;
+          -moz-border-radius: 500px;
+          border-radius: 500px;
+          background: white;
+          font-size: .8em;
+          text-align: center;
+          line-height: 0;
+          padding: 6px;
+          font-size: 0.7em;
         }
       }
     }
   }
   .meta {
     position: absolute;
-    bottom: 10px;
-    left: 12px;
+    -webkit-transition: transform 0.3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    padding: 10px 12px 5px;
   }
   h1, h2 {
     color: #fff;
