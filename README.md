@@ -9,7 +9,7 @@
 
 > 
 > Player based on Electron + VueJS. Using media keys and system notifications.
-> [Go to Radio Nova website](http://www.nova.fr/)`
+> [Go to Radio Nova website](http://www.nova.fr/)
 >
 
 ### Releases
