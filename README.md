@@ -1,16 +1,20 @@
-# Radio Nova (FR) Player
+## Radio Nova Player
 
+[![Build Status](https://travis-ci.org/romainlp/Radio-Nova.svg?branch=master)](https://travis-ci.org/romainlp/Radio-Nova)
+[![Build status](https://ci.appveyor.com/api/projects/status/55jk6rbg6syiq6wr?svg=true)](https://ci.appveyor.com/project/romainlp/radio-nova)
+
+## Description
 
 ![Radio Nova Player](https://github.com/romainlp/Radio-Nova/raw/master/static/screenshot.jpeg "Mac OS Screenshot")
 
-
+> 
 > Player based on Electron + VueJS. Using media keys and system notifications.
+> [Go to Radio Nova website](http://www.nova.fr/)`
+>
 
-[Radio Nova](http://www.nova.fr/)
+### Releases
 
-[![Build Status](https://travis-ci.org/romainlp/Radio-Nova.svg?branch=master)](https://travis-ci.org/romainlp/Radio-Nova)
-
-[Download the latest release (Mac Only)](https://github.com/romainlp/Radio-Nova/releases/latest)
+[Download the latest release](https://github.com/romainlp/Radio-Nova/releases/latest)
 
 #### Build Setup
 
@@ -19,10 +23,16 @@
 yarn
 
 # serve with hot reload at localhost:9080
-npm run dev
+yarn run dev
 
 # build electron application for production
-npm run build
+yarn run build
+
+# run unit test
+yarn test
+
+# lint all JS/Vue component files in `src/`
+yarn run link
 
 ```
 
