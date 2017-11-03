@@ -32,8 +32,8 @@
       return {
         datas: {},
         image: null,
-        title: null,
-        subtitle: null,
+        title: '...',
+        subtitle: '...',
         spotify: null,
         deezer: null,
         itunes: null,
