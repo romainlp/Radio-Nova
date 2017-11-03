@@ -39,9 +39,13 @@ deploy:
   provider: releases
   api_key:
     secure: VFPRFrx5U4jjf5tLB0yHkBrqumV7nc+K3jo7nJmvC7NTOTF7k12SAAJymJp1Zqebjp6H9I5Qe9qUOBAfTm5AxvuFWHA7bHz4SGoW5UbMIvd/D6WkHXMokNOMUvWfRADlj3JYrQ9zNb5NxGPZThqdg45A5LnTQbEq2/Yfoaj7kyVaBS0aFyKR/s6y6wX3NRxxFAucz8bnMyfScwha/dshn6BGyMZEUBdvvCi32iAskTEZIBo2SZV1JvljV9vFBeir3LSKuGoWMIBrCl2TSGilDzYnTbYWZZu/amYniHdPbyNe6La/A5hZ/e/I1DQpd5XZ6q+mO5iUvr+xNzbQW1hWi6/ccsjsY5HvH4xfjyydqE0lufPMmloLMbcBlV1xtbBK+lbiUp5TvKWsAnMUSOIQDzx5zM7KONDfEF134vy9ZBdcXS+LkHz2qxchHtYo6FnD2S3F5NYA+lFu4llN3zFObDwsjC91jbwn6nAT4pDBTqxP74gsyYpprVw+MC39M7lm2YxbFY3mWaz3XlBlBm3u5xqV8aeqC/YB7Bqi8Wc9kxkLIvwQwjMwDYbQqI8AOhxr9iqa5vQoohuc5xy5ivG/fy3CiK+G6qmbH06Dvd4eBNy7NKSUi/VGddCksBK8yQz+C8moCuntszfGRUISWLIAohdW+OyPeDrLII7+uZHUsKI=
-  file_glob: true
   file: "${RELEASE_PKG_FILE}"
   skip_cleanup: true
   overwrite: true
+  branches:
+    only:
+      - master
+      - /^v\d+(\.\d+)+$/
   on:
     repo: romainlp/Radio-Nova
+    tags: true

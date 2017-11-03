@@ -17,7 +17,8 @@
     "postinstall": "",
     "unit": "karma start test/unit/karma.conf.js",
     "lint": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter src",
-    "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src"
+    "lint:fix": "eslint --ext .js,.vue -f ./node_modules/eslint-friendly-formatter --fix src",
+    "release": "node .electron-vue/build.js && electron-builder --publish=always"
   },
   "build": {
     "productName": "radionova",
