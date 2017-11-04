@@ -1,6 +1,6 @@
 {
   "name": "radionova",
-  "version": "v0.1.0",
+  "version": "v0.1.1",
   "author": "Romain Le Polh <romainlepolh@gmail.com>",
   "description": "Radio Nova (FR) Player",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "release": "node .electron-vue/build.js && electron-builder --publish=always"
   },
   "build": {
-    "productName": "radionova",
+    "productName": "Radio Nova",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut } from 'electron'
+import { app, BrowserWindow, globalShortcut, Menu } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -41,7 +41,60 @@ function createWindow () {
   })
 }
 
+function createMenu () {
+  const template = [{
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click () { require('electron').shell.openExternal('https://github.com/romainlp/Radio-Nova') }
+      }
+    ]
+  }]
+
+  if (process.platform === 'darwin') {
+    const name = app.getName()
+    template.unshift({
+      label: name,
+      submenu: [
+        {
+          role: 'about'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'services',
+          submenu: []
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'hide'
+        },
+        {
+          role: 'hideothers'
+        },
+        {
+          role: 'unhide'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'quit'
+        }
+      ]
+    })
+  }
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
+}
+
 app.on('ready', createWindow)
+app.on('ready', createMenu)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
