@@ -1,6 +1,6 @@
 {
   "name": "radionova",
-  "version": "v0.1.1",
+  "version": "v0.2.0",
   "author": "Romain Le Polh <romainlepolh@gmail.com>",
   "description": "Radio Nova (FR) Player",
   "license": "MIT",
@@ -45,10 +45,10 @@
       ]
     },
     "mac": {
-      "icon": "build/icons/icon.icns"
+      "icon": "build/icons/radionova.icns"
     },
     "win": {
-      "icon": "build/icons/icon.ico"
+      "icon": "build/icons/radionova.ico"
     },
     "linux": {
       "icon": "build/icons"

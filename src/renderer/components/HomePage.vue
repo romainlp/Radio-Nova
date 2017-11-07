@@ -7,10 +7,28 @@
     <div class="meta" v-bind:style="getBackgroundColor()">
       <transition name="fade"><h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1></transition>
       <transition name="fade"><h2 v-if="subtitle" v-bind:style="getTextColor()">{{ subtitle }}</h2></transition>
-      <div class="links" v-if="trackAsLinks" v-bind:style="getBackgroundColor()">
-        <a href="" v-if="spotify" v-on:click.prevent="openSpotify" class="socicon-spotify" v-bind:style="getBackgroundColor()"></a>
-        <a href="" v-if="deezer" v-on:click.prevent="openDeezer" class="socicon-deezer"></a>
-        <a href="" v-if="itunes" v-on:click.prevent="openItunes" class="socicon-apple"></a>
+    </div>
+
+    <div class="links" v-if="trackAsLinks" v-bind:style="getBackgroundColor()">
+      <div class="toggle-mute">
+        <a href="" class="play" v-on:click.prevent="toggleMute" v-bind:class="{ muted: mute }"></a>
+      </div>
+      <div class="social-list">
+        <a 
+          href="" 
+          v-if="spotify" 
+          v-on:click.prevent="openSpotify" 
+          class="socicon-spotify social"></a>
+        <a 
+          href="" 
+          v-if="deezer" 
+          v-on:click.prevent="openDeezer" 
+          class="socicon-deezer social"></a>
+        <a 
+          href="" 
+          v-if="itunes" 
+          v-on:click.prevent="openItunes" 
+          class="socicon-apple social"></a>
       </div>
     </div>
 
@@ -84,7 +102,7 @@
         }
       },
       player: function (player) {
-        // player.play()
+        player.play()
       }
     },
 
@@ -109,16 +127,23 @@
 
         Vibrant.from(this.image).getPalette(function (err, palette) {
           if (err) {
-            console.log(err)
             vm.textColor = '#fff'
           } else {
             if (palette.Muted) {
               vm.textColor = palette.Muted.getBodyTextColor()
               vm.backgroundColor = palette.Muted.getHex()
             }
-            console.log(palette)
           }
         })
+      },
+      toggleMute () {
+        if (this.player.isMuted()) {
+          this.player.toggleMute()
+          this.mute = false
+        } else {
+          this.player.toggleMute()
+          this.mute = true
+        }
       },
 
       open (link) {
@@ -128,6 +153,12 @@
       getTextColor: function () {
         return {
           color: this.textColor
+        }
+      },
+
+      getInvertTextColor: function () {
+        return {
+          color: this.backgroundColor
         }
       },
 
@@ -185,18 +216,15 @@
     margin: 0;
     padding: 0;
   }
-
   .hidden {
     display: none;
   }
-
   .fade-enter-active, .fade-leave-active {
     transition: opacity .5s
   }
   .fade-enter, .fade-leave-to {
     opacity: 0
   }
-
   [class^="socicon-"],
   [class*=" socicon-"] {
     font-family: 'Socicon' !important;
@@ -209,16 +237,92 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
   body { 
     overflow: hidden;
     -ms-overflow-style: scrollbar;
     -webkit-app-region: drag;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   }
-
   .plyr--audio {
     display: none;
+  }
+
+  $background: #f9f9f9;
+  $foreground: #fff;
+
+  $foreground-light: #34495e;
+  $size: 10px;
+  $ratio: .2;
+  $transition-time: 0.3s;
+
+  .toggle-mute {
+    width: 60px;
+    height: 60px;
+    background: transparent url(../assets/play-noise.png) no-repeat center center;
+    margin-left: 0;
+    text-align: center;
+    padding-top: 10px;
+    float: left;
+  }
+  .play {
+    display:block;
+    width: 0; 
+    height: 0; 
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid $foreground;
+    margin: 15px auto;
+    position: relative;
+    z-index:1;
+    transition: all $transition-time;
+    -webkit-transition: all $transition-time;
+    -moz-transition: all $transition-time;
+  
+    &:before {
+      content: '';
+      position: absolute;
+      top: ($size*-1.5);
+      left: -20px;
+      bottom: ($size*-1.5);
+      right: -10px;
+      border-radius: 50%;
+      border: ($size*0.2) solid $foreground;
+      z-index: 2;
+      transition: all $transition-time;
+      -webkit-transition: all $transition-time;
+      -moz-transition: all $transition-time;
+    }
+    &:after {
+      content:'';
+      opacity:0;
+      transition: opacity ($transition-time * 2);
+      -webkit-transition: opacity ($transition-time * 2);
+      -moz-transition: opacity ($transition-time * 2);
+    }
+  
+    &:hover, &:focus {
+      &:before {
+         transform: scale(1.1);
+         -webkit-transform: scale(1.1);
+         -moz-transform: scale(1.1);
+      }
+    }
+  
+    &.muted {
+      border-color:transparent;
+      &:after {
+        content: '';
+        opacity: 1;
+        width: 8px;
+        height: 12px;
+        background: $foreground;
+        position: absolute;
+        right: -1px;
+        top: -6px;
+        border-left: ($size*0.4) solid $foreground;
+        box-shadow: inset ($size*0.6) 0 0 0 $background;
+      }
+    }
   }
 
   #wrapper {
@@ -229,15 +333,15 @@
 
 
     &.has-link:hover {
-      /*.links {
-        -webkit-transition: transform 0.3s ease-in-out;
-        transition: transform 0.3s ease-in-out;
-        transform: translateY(-60px);
-      }*/
       .meta {
         -webkit-transition: transform 0.3s ease-in-out;
         transition: transform 0.3s ease-in-out;
-        transform: translateY(0px);
+        transform: translateY(-60px);
+      }
+      .links {
+        -webkit-transition: transform 0.3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
+        transform: translateY(-60px);
       }
     }
 
@@ -258,28 +362,36 @@
   .links {
     width: 100%;
     background: #F55656;
-    text-align: center;
-    padding: 15px 12px 15px;
+    padding: 0;
     -webkit-transition: transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out;
     height: 60px;
+    bottom: -60px;
+    position: absolute;
+
+
+    .social-list {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      background: #333;
+      a {
+        margin: 0 15px;
+      }
+    }
     a {
       text-decoration: none;
       font-size: 2em;
       display: inline-block;
       vertical-align: middle;
       color: white;
-      -webkit-transition: transform 0.3s ease-in-out;
-      transition: transform 0.3s ease-in-out;
-      margin: 0 10px;
-      &:hover {
-        transform: translateY(-5%);
-      }
       &.socicon-spotify {
-        color: inherit;
+        margin-top: -6px;
         &:before {
           background: #fff;
-          color: inherit;
+          color: #333;
           width: 1.4em;
           height: 1.4em;
           -webkit-border-radius: 500px;
@@ -303,7 +415,6 @@
     left: 0;
     bottom: 0px;
     padding: 10px 12px 10px;
-    transform: translateY(60px);
   }
   h1, h2 {
     color: #fff;
