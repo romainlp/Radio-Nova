@@ -48,6 +48,10 @@ function createMenu () {
       {
         label: 'Learn More',
         click () { require('electron').shell.openExternal('https://github.com/romainlp/Radio-Nova') }
+      },
+      {
+        label: 'Radio Nova Website',
+        click () { require('electron').shell.openExternal('http://www.nova.fr') }
       }
     ]
   }]
