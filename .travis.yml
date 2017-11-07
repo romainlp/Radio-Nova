@@ -42,6 +42,10 @@ deploy:
   file: "${RELEASE_PKG_FILE}"
   skip_cleanup: true
   overwrite: true
+  branches:
+    only:
+      - master
+      - /^v\d+(\.\d+)+$/
   on:
     repo: romainlp/Radio-Nova
     tags: true

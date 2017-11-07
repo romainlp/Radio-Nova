@@ -1,8 +1,6 @@
 <template>
   <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': trackAsLinks() }">
-    <audio v-if="stream" ref="audioplayer">
-      <source :src="stream" type="audio/mp3">
-    </audio>
+    <audio ref="audioplayer"></audio>
 
     <div class="meta" v-bind:style="getBackgroundColor()">
       <transition name="fade"><h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1></transition>
@@ -87,9 +85,8 @@
         setTimeout(function () {
           vm.title = datas.title
           vm.subtitle = datas.subtitle
-          if (datas.image) {
-            vm.setImage(datas)
-          }
+          vm.setImage(datas)
+
           if (datas.currentTrack != null) {
             vm.deezer = datas.currentTrack.deezer_url
             vm.spotify = datas.currentTrack.spotify_url
@@ -97,7 +94,7 @@
           }
         }, NOTIFICATION_DELAY)
         if (this.stream === undefined) {
-          this.stream = datas.radio.high_def_stream_url
+          // this.stream = datas.radio.high_def_stream_url
           this.setPlayer()
         }
       },
@@ -123,18 +120,22 @@
        */
       setImage (datas) {
         var vm = this
-        this.image = datas.image
-
-        Vibrant.from(this.image).getPalette(function (err, palette) {
-          if (err) {
-            vm.textColor = '#fff'
-          } else {
-            if (palette.Muted) {
-              vm.textColor = palette.Muted.getBodyTextColor()
-              vm.backgroundColor = palette.Muted.getHex()
+        if (datas.image) {
+          this.image = datas.image
+          Vibrant.from(this.image).getPalette(function (err, palette) {
+            if (err) {
+              vm.textColor = '#fff'
+            } else {
+              if (palette.Muted) {
+                vm.textColor = palette.Muted.getBodyTextColor()
+                vm.backgroundColor = palette.Muted.getHex()
+              }
             }
-          }
-        })
+          })
+        } else {
+          this.textColor = '#fff'
+          this.backgroundColor = 'transparent'
+        }
       },
       toggleMute () {
         if (this.player.isMuted()) {
@@ -204,6 +205,14 @@
         setTimeout(function () {
           var players = Plyr.setup()
           vm.player = players[0]
+          vm.player.source({
+            type: 'audio',
+            title: 'Radio Nova',
+            sources: [{
+              src: vm.datas.radio.high_def_stream_url,
+              type: 'audio/mp3'
+            }]
+          })
         }, 200)
       }
     }
