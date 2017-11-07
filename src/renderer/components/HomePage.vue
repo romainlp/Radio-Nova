@@ -1,25 +1,26 @@
 <template>
-  <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': isLink() }">
+  <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': trackAsLinks() }">
     <audio v-if="stream" ref="audioplayer">
       <source :src="stream" type="audio/mp3">
     </audio>
 
-    <div class="meta">
-      <transition name="fade"><h1 v-if="title">{{ title }}</h1></transition>
-      <transition name="fade"><h2 v-if="subtitle">{{ subtitle }}</h2></transition>
+    <div class="meta" v-bind:style="getBackgroundColor()">
+      <transition name="fade"><h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1></transition>
+      <transition name="fade"><h2 v-if="subtitle" v-bind:style="getTextColor()">{{ subtitle }}</h2></transition>
+      <div class="links" v-if="trackAsLinks" v-bind:style="getBackgroundColor()">
+        <a href="" v-if="spotify" v-on:click.prevent="openSpotify" class="socicon-spotify" v-bind:style="getBackgroundColor()"></a>
+        <a href="" v-if="deezer" v-on:click.prevent="openDeezer" class="socicon-deezer"></a>
+        <a href="" v-if="itunes" v-on:click.prevent="openItunes" class="socicon-apple"></a>
+      </div>
     </div>
 
-    <div class="links" v-if="isLink">
-      <a href="" v-if="spotify" v-on:click.prevent="openSpotify" class="socicon-spotify"></a>
-      <a href="" v-if="deezer" v-on:click.prevent="openDeezer" class="socicon-deezer"></a>
-      <a href="" v-if="itunes" v-on:click.prevent="openItunes" class="socicon-apple"></a>
-    </div>
   </div>
 </template>
 
 <script>
   import { NOTIFICATION_DELAY, DEFAULT_IMAGE } from '../config'
   import OnTheAir from '../services/OnTheAir'
+  var Vibrant = require('node-vibrant')
   var { ipcRenderer } = require('electron')
   var Plyr = require('plyr')
 
@@ -39,7 +40,9 @@
         itunes: null,
         mute: false,
         stream: undefined,
-        player: null
+        player: null,
+        textColor: '#fff',
+        backgroundColor: 'transparent'
       }
     },
 
@@ -66,7 +69,9 @@
         setTimeout(function () {
           vm.title = datas.title
           vm.subtitle = datas.subtitle
-          vm.image = datas.image
+          if (datas.image) {
+            vm.setImage(datas)
+          }
           if (datas.currentTrack != null) {
             vm.deezer = datas.currentTrack.deezer_url
             vm.spotify = datas.currentTrack.spotify_url
@@ -79,13 +84,15 @@
         }
       },
       player: function (player) {
-        player.play()
+        // player.play()
       }
     },
 
     methods: {
-
-      isLink () {
+      /**
+       * Check if the current track have at least one commercial link
+       */
+      trackAsLinks () {
         if (this.spotify === null &&
           this.deezer === null &&
           this.itunes === null) {
@@ -93,9 +100,42 @@
         }
         return true
       },
+      /**
+       *
+       */
+      setImage (datas) {
+        var vm = this
+        this.image = datas.image
+
+        Vibrant.from(this.image).getPalette(function (err, palette) {
+          if (err) {
+            console.log(err)
+            vm.textColor = '#fff'
+          } else {
+            if (palette.Muted) {
+              vm.textColor = palette.Muted.getBodyTextColor()
+              vm.backgroundColor = palette.Muted.getHex()
+            }
+            console.log(palette)
+          }
+        })
+      },
 
       open (link) {
         this.$electron.shell.openExternal(link)
+      },
+
+      getTextColor: function () {
+        return {
+          color: this.textColor
+        }
+      },
+
+      getBackgroundColor: function () {
+        return {
+          backgroundColor: this.backgroundColor,
+          color: this.backgroundColor
+        }
       },
 
       backgroundImage: function () {
@@ -146,12 +186,16 @@
     padding: 0;
   }
 
+  .hidden {
+    display: none;
+  }
+
   .fade-enter-active, .fade-leave-active {
-  transition: opacity .5s
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0
-}
+    transition: opacity .5s
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0
+  }
 
   [class^="socicon-"],
   [class*=" socicon-"] {
@@ -185,15 +229,15 @@
 
 
     &.has-link:hover {
-      .links {
+      /*.links {
         -webkit-transition: transform 0.3s ease-in-out;
         transition: transform 0.3s ease-in-out;
-        transform: translateY(-70px);
-      }
+        transform: translateY(-60px);
+      }*/
       .meta {
         -webkit-transition: transform 0.3s ease-in-out;
         transition: transform 0.3s ease-in-out;
-        transform: translateY(-70px);
+        transform: translateY(0px);
       }
     }
 
@@ -212,15 +256,13 @@
     object-fit: cover;
   }
   .links {
-    position: absolute;
     width: 100%;
     background: #F55656;
     text-align: center;
-    padding: 15px 12px;
+    padding: 15px 12px 15px;
     -webkit-transition: transform 0.3s ease-in-out;
     transition: transform 0.3s ease-in-out;
-    height: 70px;
-    bottom: -70px;
+    height: 60px;
     a {
       text-decoration: none;
       font-size: 2em;
@@ -234,9 +276,10 @@
         transform: translateY(-5%);
       }
       &.socicon-spotify {
+        color: inherit;
         &:before {
           background: #fff;
-          color: #F55656;
+          color: inherit;
           width: 1.4em;
           height: 1.4em;
           -webkit-border-radius: 500px;
@@ -258,12 +301,12 @@
     transition: transform 0.3s ease-in-out;
     width: 100%;
     left: 0;
-    bottom: 10px;
-    padding: 10px 12px 5px;
+    bottom: 0px;
+    padding: 10px 12px 10px;
+    transform: translateY(60px);
   }
   h1, h2 {
     color: #fff;
-    text-shadow: 1px 1px 1px #222;
     font-size: 16px;
     font-weight: 300;
   }

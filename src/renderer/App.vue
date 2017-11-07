@@ -9,7 +9,3 @@
     name: 'radionova'
   }
 </script>
-
-<style>
-  /* CSS */
-</style>

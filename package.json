@@ -60,6 +60,7 @@
     "cheerio": "^1.0.0-rc.2",
     "mocha": "^4.0.1",
     "node-sass": "^4.5.3",
+    "node-vibrant": "^3.0.0-alpha.2",
     "player": "^0.6.1",
     "plyr": "^2.0.16",
     "sass-loader": "^6.0.6",
