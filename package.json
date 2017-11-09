@@ -65,6 +65,7 @@
     "plyr": "^2.0.16",
     "sass-loader": "^6.0.6",
     "vue": "^2.3.3",
+    "vue-awesome": "^2.3.4",
     "vue-electron": "^1.0.6",
     "vue-router": "^2.5.3",
     "vuex": "^2.3.1"

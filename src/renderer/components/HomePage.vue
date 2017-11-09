@@ -1,6 +1,20 @@
 <template>
   <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': true }">
     <audio ref="audioplayer" class="hidden"></audio>
+
+    <a href="" class="show-infos" v-on:click.prevent="showTrackInfos()">
+      <icon name="info-circle"></icon>
+    </a>
+
+    <transition name="fade">
+      <div v-if="trackInfos" class="track-infos">
+        <div>
+          <h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1>
+          <h2 v-if="subtitle" v-bind:style="getTextColor()">{{ subtitle }}</h2>
+        </div>
+      </div>
+    </transition>
+
     <div class="meta" v-bind:style="getBackgroundColor()">
       <h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1>
       <h2 v-if="subtitle" v-bind:style="getTextColor()">{{ subtitle }}</h2>
@@ -53,7 +67,8 @@
         stream: undefined,
         player: null,
         textColor: '#fff',
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        trackInfos: false
       }
     },
     mounted () {
@@ -111,14 +126,21 @@
               vm.textColor = '#fff'
             } else {
               if (palette.Muted) {
-                vm.textColor = palette.Muted.getBodyTextColor()
-                vm.backgroundColor = palette.Muted.getHex()
+                vm.textColor = palette.Vibrant.getHex()
+                // vm.backgroundColor = palette.Muted.getHex()
               }
             }
           })
         } else {
           this.textColor = '#fff'
           this.backgroundColor = 'transparent'
+        }
+      },
+      showTrackInfos () {
+        if (this.trackInfos) {
+          this.trackInfos = false
+        } else {
+          this.trackInfos = true
         }
       },
       /**
@@ -143,7 +165,7 @@
       /**
        * CSS Class: get text color base on background image
        */
-      getTextColor: function () {
+      getTextColor () {
         return {
           color: this.textColor
         }
@@ -151,16 +173,16 @@
       /**
        * CSS Class: background and text color based on the background image
        */
-      getBackgroundColor: function () {
+      getBackgroundColor () {
         return {
-          backgroundColor: this.backgroundColor,
+          backgroundColor: '#333',
           color: this.backgroundColor
         }
       },
       /**
        * CSS Class: Set the background image url as inline property
        */
-      backgroundImage: function () {
+      backgroundImage () {
         if (this.image) {
           return {
             backgroundImage: 'url(' + this.image + ')'
@@ -174,7 +196,7 @@
       /**
        * Init player and load source
        */
-      setPlayer: function () {
+      setPlayer () {
         var vm = this
         setTimeout(function () {
           var players = Plyr.setup()
@@ -246,8 +268,33 @@
     -moz-osx-font-smoothing: grayscale;
   }
   /**
+   * Track infos
+   */
+  .track-infos {
+    width: 100vw;
+    height: 100vh;
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    h1 {
+      font-size: 16px;
+    }
+    h2 {
+      font-size: 13px;
+    }
+  }
+  /**
    * Controls
    */
+  .show-infos {
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    svg {
+      fill: #fff;
+    }
+  }
   .links {
     width: 100%;
     background: #F55656;
@@ -367,7 +414,7 @@
     transition: transform 0.3s ease-in-out;
     width: 100%;
     left: 0;
-    bottom: 0px;
+    top: -60px;
     padding: 10px 12px 10px;
     h1, h2 {
       color: #fff;

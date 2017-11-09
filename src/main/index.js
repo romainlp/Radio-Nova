@@ -19,10 +19,10 @@ function createWindow () {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    minWidth: 200,
-    minHeight: 200,
-    maxWidth: 600,
-    maxHeight: 600,
+    minWidth: 250,
+    minHeight: 250,
+    maxWidth: 800,
+    maxHeight: 800,
     width: 300,
     height: 300,
     titleBarStyle: 'hidden-inset'
