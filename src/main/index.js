@@ -1,4 +1,5 @@
-import { app, BrowserWindow, globalShortcut, Menu } from 'electron'
+import { app, BrowserWindow, globalShortcut, Menu, dialog, shell } from 'electron'
+import fetch from 'electron-fetch'
 
 /**
  * Set `__static` path to static files in production
@@ -25,7 +26,8 @@ function createWindow () {
     maxHeight: 800,
     width: 300,
     height: 300,
-    titleBarStyle: 'hidden-inset'
+    titleBarStyle: 'hidden-inset',
+    autoHideMenuBar: true
   })
 
   mainWindow.setAspectRatio(1)
@@ -97,8 +99,32 @@ function createMenu () {
   Menu.setApplicationMenu(menu)
 }
 
+function checkUpdates () {
+  fetch('https://raw.githubusercontent.com/romainlp/Radio-Nova/master/package.json')
+    .then(res => res.json())
+    .then(function (json) {
+      if (json.version) {
+        var compareVersions = require('compare-versions')
+        if (compareVersions(json.version, app.getVersion()) === 1) {
+          dialog.showMessageBox(null, {
+            title: 'Update available',
+            message: 'An update for Radio Nova is available.',
+            buttons: ['Download', 'Cancel']
+          }, goToGithub)
+        }
+      }
+    })
+}
+
+function goToGithub (response) {
+  if (response === 0) {
+    shell.openExternal('https://github.com/romainlp/Radio-Nova/releases/latest')
+  }
+}
+
 app.on('ready', createWindow)
 app.on('ready', createMenu)
+app.on('ready', checkUpdates)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

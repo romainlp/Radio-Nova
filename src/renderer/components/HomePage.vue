@@ -128,7 +128,6 @@
             } else {
               if (palette.Muted) {
                 vm.textColor = palette.Vibrant.getHex()
-                // vm.backgroundColor = palette.Muted.getHex()
               }
             }
           })
@@ -343,22 +342,7 @@
           -webkit-transition: all $animation-duration;
           -moz-transition: all $animation-duration;
         }
-        &:after {
-          content:'';
-          opacity:0;
-          transition: opacity ($animation-duration * 2);
-          -webkit-transition: opacity ($animation-duration * 2);
-          -moz-transition: opacity ($animation-duration * 2);
-        }
-        &:hover, &:focus {
-          &:before {
-             transform: scale(1.1);
-             -webkit-transform: scale(1.1);
-             -moz-transform: scale(1.1);
-          }
-        }
-        &.muted {
-          border-color:transparent;
+        border-color:transparent;
           &:after {
             content: '';
             opacity: 1;
@@ -371,6 +355,22 @@
             border-left: ($size*0.4) solid $foreground;
             box-shadow: inset ($size*0.6) 0 0 0 $background;
           }
+        
+        &:hover, &:focus {
+          &:before {
+             transform: scale(1.1);
+             -webkit-transform: scale(1.1);
+             -moz-transform: scale(1.1);
+          }
+        }
+        &.muted {
+          &:after {
+          content:'';
+          opacity:0;
+          transition: opacity ($animation-duration * 2);
+          -webkit-transition: opacity ($animation-duration * 2);
+          -moz-transition: opacity ($animation-duration * 2);
+        }
         }
       }
     }
