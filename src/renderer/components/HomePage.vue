@@ -1,6 +1,10 @@
 <template>
-  <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': true }">
+  <div id="wrapper" v-bind:class="{ infos: trackInfos, muted: mute, 'has-link': true }">
     <audio ref="audioplayer" class="hidden"></audio>
+
+    <div class="app-bg">
+      <img :src="image" />
+    </div>
 
     <a href="" class="show-infos" v-if="title" v-on:click.prevent="showTrackInfos()">
       <icon v-if="trackInfos == false" name="info-circle"></icon>
@@ -10,17 +14,13 @@
     <transition name="fade">
       <div v-if="trackInfos" class="track-infos">
         <div>
-          <h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1>
-          <h2 v-if="subtitle" v-bind:style="getTextColor()">{{ subtitle }}</h2>
+          <h1 v-if="title">{{ title }}</h1>
+          <h2 v-if="subtitle">{{ subtitle }}</h2>
         </div>
       </div>
     </transition>
 
-    <div class="meta" v-bind:style="getBackgroundColor()">
-      <h1 v-if="title" v-bind:style="getTextColor()">{{ title }}</h1>
-      <h2 v-if="subtitle" v-bind:style="getTextColor()">{{ subtitle }}</h2>
-    </div>
-    <div class="links" v-if="trackAsLinks" v-bind:style="getBackgroundColor()">
+    <div class="links" v-if="trackAsLinks">
       <div class="toggle-mute">
         <a href="" class="play" v-on:click.prevent="toggleMute" v-bind:class="{ muted: mute }"></a>
       </div>
@@ -49,7 +49,6 @@
   import { NOTIFICATION_DELAY, DEFAULT_IMAGE } from '../config'
   import OnTheAir from '../services/OnTheAir'
   var { ipcRenderer } = require('electron')
-  var Vibrant = require('node-vibrant')
   var Plyr = require('plyr')
 
   export default {
@@ -58,7 +57,7 @@
     data: function () {
       return {
         datas: {},
-        image: null,
+        image: DEFAULT_IMAGE,
         title: '...',
         subtitle: '...',
         spotify: null,
@@ -67,7 +66,6 @@
         mute: false,
         stream: undefined,
         player: null,
-        textColor: '#fff',
         backgroundColor: 'transparent',
         trackInfos: false
       }
@@ -119,20 +117,10 @@
        * Set background image and set title colors
        */
       setImage (datas) {
-        var vm = this
         if (datas.image) {
           this.image = datas.image
-          Vibrant.from(this.image).getPalette(function (err, palette) {
-            if (err) {
-              vm.textColor = '#fff'
-            } else {
-              if (palette.Muted) {
-                vm.textColor = palette.Vibrant.getHex()
-              }
-            }
-          })
         } else {
-          this.textColor = '#fff'
+          this.image = DEFAULT_IMAGE
           this.backgroundColor = 'transparent'
         }
       },
@@ -164,37 +152,6 @@
        */
       open (link) {
         this.$electron.shell.openExternal(link)
-      },
-      /**
-       * CSS Class: get text color base on background image
-       */
-      getTextColor () {
-        return {
-          color: this.textColor
-        }
-      },
-      /**
-       * CSS Class: background and text color based on the background image
-       */
-      getBackgroundColor () {
-        return {
-          backgroundColor: '#333',
-          color: this.backgroundColor
-        }
-      },
-      /**
-       * CSS Class: Set the background image url as inline property
-       */
-      backgroundImage () {
-        if (this.image) {
-          return {
-            backgroundImage: 'url(' + this.image + ')'
-          }
-        } else {
-          return {
-            backgroundImage: 'url(' + DEFAULT_IMAGE + ')'
-          }
-        }
       },
       /**
        * Init player and load source
@@ -271,19 +228,50 @@
     -moz-osx-font-smoothing: grayscale;
   }
   /**
+   * Layout
+   */
+  .app-bg {
+    position: absolute;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    object-fit: cover;
+    img {
+      transition: all $animation-duration ease-in-out;
+      object-fit: cover;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  #wrapper.infos {
+    .app-bg {
+      img {
+        transition: all $animation-duration ease-in-out;
+        transform: scale(1.1);
+        filter: blur(6px);
+      }
+    }
+  }
+  /**
    * Track infos
    */
   .track-infos {
     width: 100vw;
     height: 100vh;
-    background-color: #333;
+    background-color: rgba(51, 51, 51, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     h1 {
       font-size: 16px;
+      color: #fff;
+      font-weight: 300;
     }
     h2 {
+      color: #fff;
       font-size: 13px;
     }
   }
@@ -342,19 +330,18 @@
           -webkit-transition: all $animation-duration;
           -moz-transition: all $animation-duration;
         }
-        border-color:transparent;
-          &:after {
-            content: '';
-            opacity: 1;
-            width: 8px;
-            height: 12px;
-            background: $foreground;
-            position: absolute;
-            right: -1px;
-            top: -6px;
-            border-left: ($size*0.4) solid $foreground;
-            box-shadow: inset ($size*0.6) 0 0 0 $background;
-          }
+        &:after {
+          content: '';
+          opacity: 1;
+          width: 8px;
+          height: 12px;
+          background: $foreground;
+          position: absolute;
+          right: -1px;
+          top: -6px;
+          border-left: ($size*0.4) solid $foreground;
+          box-shadow: inset ($size*0.6) 0 0 0 $background;
+        }
         
         &:hover, &:focus {
           &:before {
@@ -365,12 +352,12 @@
         }
         &.muted {
           &:after {
-          content:'';
-          opacity:0;
-          transition: opacity ($animation-duration * 2);
-          -webkit-transition: opacity ($animation-duration * 2);
-          -moz-transition: opacity ($animation-duration * 2);
-        }
+            content:'';
+            opacity:0;
+            transition: opacity ($animation-duration * 2);
+            -webkit-transition: opacity ($animation-duration * 2);
+            -moz-transition: opacity ($animation-duration * 2);
+          }
         }
       }
     }
