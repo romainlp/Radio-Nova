@@ -5,7 +5,7 @@
 
 ## Description
 
-![Radio Nova Player](https://github.com/romainlp/Radio-Nova/raw/master/static/screenshot.jpeg "Mac OS Screenshot")
+![Radio Nova Player](https://github.com/romainlp/Radio-Nova/raw/master/static/screenshot.gif "Mac OS Screenshot")
 
 > 
 > Player based on Electron + VueJS. Using media keys and system notifications.
