@@ -2,8 +2,9 @@
   <div id="wrapper" v-bind:style="backgroundImage()" v-bind:class="{ muted: mute, 'has-link': true }">
     <audio ref="audioplayer" class="hidden"></audio>
 
-    <a href="" class="show-infos" v-on:click.prevent="showTrackInfos()">
-      <icon name="info-circle"></icon>
+    <a href="" class="show-infos" v-if="title" v-on:click.prevent="showTrackInfos()">
+      <icon v-if="trackInfos == false" name="info-circle"></icon>
+      <icon v-if="trackInfos" name="times-circle"></icon>
     </a>
 
     <transition name="fade">
@@ -136,6 +137,9 @@
           this.backgroundColor = 'transparent'
         }
       },
+      /**
+       * Toggle Track infos display
+       */
       showTrackInfos () {
         if (this.trackInfos) {
           this.trackInfos = false

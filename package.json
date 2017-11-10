@@ -1,6 +1,6 @@
 {
   "name": "radionova",
-  "version": "v0.2.2",
+  "version": "v0.2.3",
   "author": "Romain Le Polh <romainlepolh@gmail.com>",
   "description": "Radio Nova (FR) Player",
   "license": "MIT",
@@ -57,18 +57,15 @@
   "dependencies": {
     "axios": "^0.16.1",
     "chai": "^4.1.2",
-    "cheerio": "^1.0.0-rc.2",
     "mocha": "^4.0.1",
     "node-sass": "^4.5.3",
     "node-vibrant": "^3.0.0-alpha.2",
-    "player": "^0.6.1",
     "plyr": "^2.0.16",
     "sass-loader": "^6.0.6",
     "vue": "^2.3.3",
     "vue-awesome": "^2.3.4",
     "vue-electron": "^1.0.6",
-    "vue-router": "^2.5.3",
-    "vuex": "^2.3.1"
+    "vue-router": "^2.5.3"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",
