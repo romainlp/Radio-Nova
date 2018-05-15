@@ -9,17 +9,28 @@ const OnTheAir = {
   datas: {},
   vm: null,
 
-  setVM: function (vm) {
+  /**
+   * Define vm property with the current Vue Instance
+   */
+  setVM (vm) {
     OnTheAir.vm = vm
     return OnTheAir
   },
 
-  start: function () {
+  /**
+   * Start the notifier service and retrieve
+   * datas for each interval defined in ../config/index.js
+   */
+  start () {
     this.getTrack()
     setInterval(this.getTrack, REFRESH_DELAY)
   },
 
-  getTrack: function () {
+  /**
+   * Request to Radio Nova Website and send the
+   * the notification if datas are retrieved
+   */
+  getTrack () {
     request(
       NOVA_URL,
       function (error, response, body) {
@@ -31,13 +42,12 @@ const OnTheAir = {
     )
   },
 
-  notify: function () {
-    var title
-    var subtitle
-    var image
-    var notify
-    var notificationTitle
-    var notificationBody
+  /**
+   * Build the content
+   * and use system built-in notification
+   */
+  notify () {
+    let title, subtitle, image, notify, notificationTitle, notificationBody
 
     if (this.datas.currentTrack === null && this.datas.currentShow === null) {
       title = this.datas.radio.name
