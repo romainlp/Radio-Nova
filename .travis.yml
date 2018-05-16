@@ -42,11 +42,10 @@ deploy:
   file: "${RELEASE_PKG_FILE}"
   skip_cleanup: true
   overwrite: true
-  if: tag =~ /^v\d+(\.\d+)+$/
   branches:
     only:
       - master
-      - /^v\d+(\.\d+)+$/
+      - /(v+\d+(\.\d+)+)/
   on:
     repo: romainlp/Radio-Nova
-    tags: true
+    tags: false
