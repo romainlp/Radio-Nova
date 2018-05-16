@@ -29,7 +29,6 @@ install:
 - curl -o- -L https://yarnpkg.com/install.sh | bash
 - source ~/.bashrc
 - npm install -g xvfb-maybe
-- npm rebuild node-sass --force
 - yarn
 script:
 - yarn run build
@@ -43,6 +42,7 @@ deploy:
   file: "${RELEASE_PKG_FILE}"
   skip_cleanup: true
   overwrite: true
+  if: tag =~ /^v\d+(\.\d+)+$/
   branches:
     only:
       - master
