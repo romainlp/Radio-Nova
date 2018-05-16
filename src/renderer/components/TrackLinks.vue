@@ -44,6 +44,13 @@
       this.$on('mute', () => {
         this.mute = this.mute === false
       })
+    },
+
+    methods: {
+      toggleMute () {
+        this.$parent.player.toggleMute()
+        this.mute = this.mute === false
+      }
     }
 
   }
