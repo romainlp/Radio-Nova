@@ -85,7 +85,7 @@
         }
       },
       player (player) {
-        player.play()
+
       }
     },
 
@@ -128,7 +128,6 @@
        */
       toggleMute () {
         this.$refs.control.$emit('mute')
-        this.player.toggleMute()
         this.mute = this.mute === false
       },
       /**
@@ -141,18 +140,19 @@
        * Init player and load source
        */
       setPlayer () {
-        setTimeout(() => {
-          let players = Plyr.setup()
-          this.player = players[0]
-          this.player.source({
-            type: 'audio',
-            title: 'Radio Nova',
-            sources: [{
-              src: this.datas.radio.high_def_stream_url,
-              type: 'audio/mp3'
-            }]
-          })
-        }, 200)
+        const player = new Plyr(this.$refs.audioplayer)
+        player.source = {
+          type: 'audio',
+          title: 'Radio Nova',
+          sources: [{
+            src: this.datas.radio.high_def_stream_url,
+            type: 'audio/mp3'
+          }]
+        }
+        player.on('canplay', () => {
+          player.play()
+        })
+        this.player = player
       }
     }
   }

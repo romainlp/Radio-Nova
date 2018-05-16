@@ -42,13 +42,13 @@
 
     mounted () {
       this.$on('mute', () => {
-        this.mute = this.mute === false
+        this.toggleMute()
       })
     },
 
     methods: {
       toggleMute () {
-        this.$parent.player.toggleMute()
+        this.$parent.player.togglePlay()
         this.mute = this.mute === false
       }
     }
