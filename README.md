@@ -12,11 +12,11 @@
 > [Go to Radio Nova website](http://www.nova.fr/)
 >
 
-### Releases
+## Releases
 
 [Download the latest release](https://github.com/romainlp/Radio-Nova/releases/latest)
 
-#### Build Setup
+## Build Setup
 
 ``` bash
 # install dependencies
@@ -35,6 +35,11 @@ yarn test
 yarn run link
 
 ```
+
+## Todos
+
+- Rewrite of the notification service.
+- Clean styles
 
 ---
 

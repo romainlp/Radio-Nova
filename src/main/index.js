@@ -26,7 +26,8 @@ function createWindow () {
     maxHeight: 800,
     width: 300,
     height: 300,
-    titleBarStyle: 'hidden-inset',
+    titleBarStyle: 'hiddenInset',
+    frame: false,
     autoHideMenuBar: true
   })
 
@@ -53,7 +54,7 @@ function createMenu () {
       },
       {
         label: 'Radio Nova Website',
-        click () { require('electron').shell.openExternal('http://www.nova.fr') }
+        click () { require('electron').shell.openExternal('https://www.nova.fr') }
       }
     ]
   }]

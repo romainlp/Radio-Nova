@@ -1,6 +1,6 @@
 {
   "name": "radionova",
-  "version": "v0.2.6",
+  "version": "v0.3.0",
   "author": "Romain Le Polh <romainlepolh@gmail.com>",
   "description": "Radio Nova (FR) Player",
   "license": "MIT",
@@ -85,7 +85,7 @@
     "css-loader": "^0.28.4",
     "del": "^3.0.0",
     "devtron": "^1.4.0",
-    "electron": "^1.7.5",
+    "electron": "^2.0.0",
     "electron-builder": "^19.19.1",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
