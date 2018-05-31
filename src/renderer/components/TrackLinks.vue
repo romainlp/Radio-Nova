@@ -48,8 +48,10 @@
 
     methods: {
       toggleMute () {
-        this.$parent.player.togglePlay()
-        this.mute = this.mute === false
+        if (this.$parent.player !== null) {
+          this.$parent.player.togglePlay()
+          this.mute = this.mute === false
+        }
       }
     }
 
